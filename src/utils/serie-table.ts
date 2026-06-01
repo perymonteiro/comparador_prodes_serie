@@ -1,8 +1,4 @@
-import {
-  calcPercentVariation,
-  getValueForYear,
-  type YearValueRow
-} from './prodes-table'
+import { calcPercentVariation, type YearValueRow } from './prodes-table'
 import {
   MSG_MISSING_YEARS,
   ROW_LABEL_AREA,
@@ -83,9 +79,16 @@ export async function copyTextToClipboard (text: string): Promise<boolean> {
 
 export function buildSerieTable (
   series: YearValueRow[],
-  anoInicial: number,
-  anoFinal: number
+  anoInicialRaw: number,
+  anoFinalRaw: number
 ): BuildSerieTableResult {
+  const anoInicial = Number(anoInicialRaw)
+  const anoFinal = Number(anoFinalRaw)
+
+  if (!Number.isFinite(anoInicial) || !Number.isFinite(anoFinal)) {
+    return { ok: false, message: MSG_MISSING_YEARS }
+  }
+
   if (anoFinal <= anoInicial) {
     return {
       ok: false,
@@ -93,25 +96,36 @@ export function buildSerieTable (
     }
   }
 
-  const columns: SerieTableColumn[] = []
+  const rowsInRange = series
+    .filter((row) => row.year >= anoInicial && row.year <= anoFinal)
+    .sort((a, b) => a.year - b.year)
 
-  for (let year = anoInicial; year <= anoFinal; year++) {
-    const value = getValueForYear(series, year)
-    if (value == null) {
-      return { ok: false, message: MSG_MISSING_YEARS }
-    }
-
-    let variationPct: number | null = null
-    if (year > anoInicial) {
-      const previousValue = getValueForYear(series, year - 1)
-      if (previousValue == null) {
-        return { ok: false, message: MSG_MISSING_YEARS }
-      }
-      variationPct = calcPercentVariation(previousValue, value)
-    }
-
-    columns.push({ year, value, variationPct })
+  if (!rowsInRange.length) {
+    return { ok: false, message: MSG_MISSING_YEARS }
   }
 
-  return { ok: true, columns }
+  if (rowsInRange[0].year !== anoInicial || rowsInRange[rowsInRange.length - 1].year !== anoFinal) {
+    return { ok: false, message: MSG_MISSING_YEARS }
+  }
+
+  const columns: SerieTableColumn[] = rowsInRange.map((row, index) => {
+    let variationPct: number | null = null
+    if (index > 0) {
+      const previousValue = rowsInRange[index - 1].value
+      if (previousValue == null || row.value == null) {
+        return null
+      }
+      variationPct = calcPercentVariation(previousValue, row.value)
+    }
+    if (row.value == null) {
+      return null
+    }
+    return { year: row.year, value: row.value, variationPct }
+  })
+
+  if (columns.some((col) => col == null)) {
+    return { ok: false, message: MSG_MISSING_YEARS }
+  }
+
+  return { ok: true, columns: columns as SerieTableColumn[] }
 }

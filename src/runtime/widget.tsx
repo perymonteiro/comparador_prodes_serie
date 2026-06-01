@@ -145,7 +145,10 @@ const Widget = (props: AllWidgetProps<IMConfig>) => {
             </Button>
           </div>
 
-          {tableResult != null && tableResult.ok === false && (
+          {anoInicial != null &&
+            anoFinal != null &&
+            tableResult != null &&
+            tableResult.ok === false && (
             <p className="comparador-error comparador-error--block">
               {tableResult.message}
             </p>

@@ -14,29 +14,39 @@ export const YearSelect = React.memo((props: YearSelectProps) => {
   const { availableYears, value, placeholder, onChange, disabled } = props
 
   const handleChange = React.useCallback(
-    (_evt: unknown, selected: unknown) => {
-      if (selected == null || selected === '') {
+    (evt: unknown, selected: unknown) => {
+      const raw =
+        selected != null && selected !== ''
+          ? selected
+          : (evt as { target?: { value?: unknown } } | null)?.target?.value
+      if (raw == null || raw === '') {
         onChange(null)
         return
       }
-      const year = Number(selected)
+      const year = Number(raw)
       onChange(Number.isFinite(year) ? year : null)
     },
     [onChange]
   )
 
+  const selectValue = value != null ? String(value) : ''
+
   return (
     <Select
       size="sm"
       className="w-100"
-      value={value ?? ''}
+      value={selectValue}
       placeholder={placeholder}
       onChange={handleChange}
       disabled={disabled || availableYears.length === 0}
     >
       <Option value="">{''}</Option>
       {availableYears.map((year) => (
-        <Option key={year} value={year} active={value === year}>
+        <Option
+          key={year}
+          value={String(year)}
+          active={value != null && value === year}
+        >
           {year}
         </Option>
       ))}

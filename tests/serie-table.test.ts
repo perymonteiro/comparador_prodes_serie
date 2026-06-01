@@ -42,12 +42,24 @@ describe('buildSerieTable', () => {
     expect(result.ok).toBe(false)
   })
 
-  it('returns error when intermediate year is missing', () => {
+  it('builds columns for sparse years in range (skips gaps)', () => {
     const sparse = [
       { year: 2021, value: 100 },
       { year: 2023, value: 200 }
     ]
     const result = buildSerieTable(sparse, 2021, 2023)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.columns).toHaveLength(2)
+    expect(result.columns[1].variationPct).toBeCloseTo(100, 5)
+  })
+
+  it('returns error when ano inicial or final is missing from series', () => {
+    const sparse = [
+      { year: 2021, value: 100 },
+      { year: 2023, value: 200 }
+    ]
+    const result = buildSerieTable(sparse, 2021, 2025)
     expect(result.ok).toBe(false)
     if (!result.ok) {
       expect(result.message).toContain('não possuem dado')
