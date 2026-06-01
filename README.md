@@ -39,7 +39,13 @@ Feature Layer tabular PRODES:
 
 Coloque esta pasta em `client/your-extensions/widgets/comparador_prodes_serie/` do [Developer Edition](https://developers.arcgis.com/experience-builder/) **1.18.0** (versão alinhada ao Portal). Compile na raiz do client (`npm run build:prod` ou `npm run build:download`, conforme a versão do EXB).
 
-No **ArcGIS Enterprise 11.0+**, a widget compilada deve ser **hospedada** em servidor web acessível ao Portal; o administrador registra o item **Experience Builder Widget** com a URL do `manifest.json` ([documentação Esri](https://doc.arcgis.com/en/experience-builder/11.0/configure-widgets/add-custom-widgets.htm)). Se a widget usar `import()` dinâmico, inclua também a pasta `chunks` no deploy.
+No **ArcGIS Enterprise 11.0+**, registre o item **Experience Builder Widget** com a URL do `manifest.json` ([documentação Esri](https://doc.arcgis.com/en/experience-builder/11.0/configure-widgets/add-custom-widgets.htm)).
+
+**Hospedagem (GitHub Pages):** build em `docs/` — Manifest URL:
+
+`https://perymonteiro.github.io/comparador_prodes_serie/manifest.json`
+
+Após alterar o código, recompile (`npm run build:prod` no client EXB) e atualize a pasta `docs/` antes do push.
 
 ## Licença e segurança
 

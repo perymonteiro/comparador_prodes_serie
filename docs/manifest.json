@@ -1,0 +1,35 @@
+{
+  "name": "comparador_prodes_serie",
+  "label": "Comparador Prodes Série",
+  "type": "widget",
+  "version": "1.0.0",
+  "exbVersion": "1.18.0",
+  "author": "Thyego Pery",
+  "description": "Widget para análise de séries temporais de desmatamento PRODES/Inpe por recorte geográfico.",
+  "copyright": "MMA",
+  "license": "não requerida",
+  "properties": {
+    "hasSettingPage": true
+  },
+  "dependency": [
+    "jimu-arcgis"
+  ],
+  "useDataSources": [
+    {
+      "types": [
+        "FEATURE_LAYER"
+      ]
+    }
+  ],
+  "supportedLocales": [
+    "pt-br",
+    "en"
+  ],
+  "translatedLocales": [
+    "en"
+  ],
+  "defaultSize": {
+    "width": 360,
+    "height": 420
+  }
+}
