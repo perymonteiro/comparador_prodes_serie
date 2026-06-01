@@ -66,6 +66,18 @@ describe('buildSerieTable', () => {
     }
   })
 
+  it('buildSerieTable accepts string years from Enterprise attributes', () => {
+    const series = [
+      { year: '2001' as unknown as number, value: 100 },
+      { year: '2002' as unknown as number, value: 110 },
+      { year: '2006' as unknown as number, value: 150 }
+    ]
+    const result = buildSerieTable(series, 2001, 2006)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.columns.map((c) => c.year)).toEqual([2001, 2002, 2006])
+  })
+
   it('builds columns for 2021–2025 with null variation on first year', () => {
     const result = buildSerieTable(mockupSeries, 2021, 2025)
     expect(result.ok).toBe(true)

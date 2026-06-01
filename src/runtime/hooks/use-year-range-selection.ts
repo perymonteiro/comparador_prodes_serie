@@ -2,6 +2,7 @@ import { React } from 'jimu-core'
 import {
   getYearsAllowedForFinal,
   getYearsAllowedForInicial,
+  yearsInclude,
   type YearValueRow
 } from '../../utils/prodes-table'
 import { buildSerieTable } from '../../utils/serie-table'
@@ -59,20 +60,16 @@ export function useYearRangeSelection (
 
   React.useEffect(() => {
     if (anoInicial == null || anoFinal == null) return
-    const allowedFinal = new Set(
-      getYearsAllowedForFinal(availableYears, [anoInicial])
-    )
-    if (!allowedFinal.has(anoFinal)) {
+    const allowedFinal = getYearsAllowedForFinal(availableYears, [anoInicial])
+    if (!yearsInclude(allowedFinal, anoFinal)) {
       setAnoFinal(null)
     }
   }, [anoInicial, anoFinal, availableYears])
 
   React.useEffect(() => {
     if (anoInicial == null || anoFinal == null) return
-    const allowedInicial = new Set(
-      getYearsAllowedForInicial(availableYears, [anoFinal])
-    )
-    if (!allowedInicial.has(anoInicial)) {
+    const allowedInicial = getYearsAllowedForInicial(availableYears, [anoFinal])
+    if (!yearsInclude(allowedInicial, anoInicial)) {
       setAnoInicial(null)
     }
   }, [anoInicial, anoFinal, availableYears])

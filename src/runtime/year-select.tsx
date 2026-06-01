@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { React, jsx } from 'jimu-core'
-import { Select, Option } from 'jimu-ui'
 
 export interface YearSelectProps {
   availableYears: number[]
@@ -14,12 +13,9 @@ export const YearSelect = React.memo((props: YearSelectProps) => {
   const { availableYears, value, placeholder, onChange, disabled } = props
 
   const handleChange = React.useCallback(
-    (evt: unknown, selected: unknown) => {
-      const raw =
-        selected != null && selected !== ''
-          ? selected
-          : (evt as { target?: { value?: unknown } } | null)?.target?.value
-      if (raw == null || raw === '') {
+    (evt: React.ChangeEvent<HTMLSelectElement>) => {
+      const raw = evt.target.value
+      if (!raw) {
         onChange(null)
         return
       }
@@ -29,28 +25,21 @@ export const YearSelect = React.memo((props: YearSelectProps) => {
     [onChange]
   )
 
-  const selectValue = value != null ? String(value) : ''
-
   return (
-    <Select
-      size="sm"
-      className="w-100"
-      value={selectValue}
-      placeholder={placeholder}
+    <select
+      className="comparador-year-select w-100"
+      value={value != null ? String(value) : ''}
       onChange={handleChange}
       disabled={disabled || availableYears.length === 0}
+      aria-label={placeholder}
     >
-      <Option value="">{''}</Option>
+      <option value="">{placeholder}</option>
       {availableYears.map((year) => (
-        <Option
-          key={year}
-          value={String(year)}
-          active={value != null && value === year}
-        >
+        <option key={year} value={String(year)}>
           {year}
-        </Option>
+        </option>
       ))}
-    </Select>
+    </select>
   )
 })
 

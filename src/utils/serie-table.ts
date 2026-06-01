@@ -1,4 +1,4 @@
-import { calcPercentVariation, type YearValueRow } from './prodes-table'
+import { calcPercentVariation, normalizeYearValueSeries, type YearValueRow } from './prodes-table'
 import {
   MSG_MISSING_YEARS,
   ROW_LABEL_AREA,
@@ -96,7 +96,9 @@ export function buildSerieTable (
     }
   }
 
-  const rowsInRange = series
+  const normalizedSeries = normalizeYearValueSeries(series)
+
+  const rowsInRange = normalizedSeries
     .filter((row) => row.year >= anoInicial && row.year <= anoFinal)
     .sort((a, b) => a.year - b.year)
 

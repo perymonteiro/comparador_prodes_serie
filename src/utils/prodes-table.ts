@@ -93,6 +93,33 @@ export function parseYear (value: unknown): number | null {
   return null
 }
 
+/** Garante anos numéricos (Enterprise pode devolver strings nos atributos). */
+export function normalizeYearValueSeries (series: YearValueRow[]): YearValueRow[] {
+  const normalized: YearValueRow[] = []
+  for (const row of series) {
+    const year = parseYear(row.year)
+    const value = row.value
+    if (year == null || value == null || !Number.isFinite(value)) continue
+    normalized.push({ year, value })
+  }
+  return normalized.sort((a, b) => a.year - b.year)
+}
+
+export function normalizeYearList (years: readonly unknown[]): number[] {
+  const out: number[] = []
+  for (const item of years) {
+    const y = parseYear(item)
+    if (y != null) out.push(y)
+  }
+  return out
+}
+
+export function yearsInclude (years: readonly unknown[], year: unknown): boolean {
+  const target = parseYear(year)
+  if (target == null) return false
+  return normalizeYearList(years).includes(target)
+}
+
 export function schemaToFieldList (schema?: IMDataSourceSchema | null): IMFieldSchema[] {
   if (!schema?.fields) return []
   return Object.keys(schema.fields).map((key) => schema.fields[key])
@@ -1390,22 +1417,24 @@ export function sumValuesForYears (
 
 /** Anos disponíveis para o período inicial (antes do período final, se houver). */
 export function getYearsAllowedForInicial (
-  allYears: number[],
-  periodoFinal: number[]
+  allYears: readonly unknown[],
+  periodoFinal: readonly unknown[]
 ): number[] {
-  const blocked = new Set(periodoFinal)
-  const maxFinal = periodoFinal.length ? Math.min(...periodoFinal) : Infinity
-  return allYears.filter((y) => !blocked.has(y) && y < maxFinal)
+  const years = normalizeYearList(allYears)
+  const blocked = new Set(normalizeYearList(periodoFinal))
+  const maxFinal = blocked.size ? Math.min(...blocked) : Infinity
+  return years.filter((y) => !blocked.has(y) && y < maxFinal)
 }
 
 /** Anos disponíveis para o período final (depois do período inicial, se houver). */
 export function getYearsAllowedForFinal (
-  allYears: number[],
-  periodoInicial: number[]
+  allYears: readonly unknown[],
+  periodoInicial: readonly unknown[]
 ): number[] {
-  const blocked = new Set(periodoInicial)
-  const minInicial = periodoInicial.length ? Math.max(...periodoInicial) : -Infinity
-  return allYears.filter((y) => !blocked.has(y) && y > minInicial)
+  const years = normalizeYearList(allYears)
+  const blocked = new Set(normalizeYearList(periodoInicial))
+  const minInicial = blocked.size ? Math.max(...blocked) : -Infinity
+  return years.filter((y) => !blocked.has(y) && y > minInicial)
 }
 
 /** Marca/desmarca um ano mantendo apenas sequências consecutivas. */

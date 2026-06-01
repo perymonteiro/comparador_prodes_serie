@@ -8,7 +8,7 @@ Repositório: [github.com/perymonteiro/comparador_prodes_serie](https://github.c
 
 | | |
 |---|---|
-| **Versão** | 1.0.0 |
+| **Versão** | 1.0.1 |
 | **Experience Builder** | 1.18.0 |
 | **Autor** | Thyego Pery |
 

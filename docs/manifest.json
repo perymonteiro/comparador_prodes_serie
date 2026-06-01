@@ -2,7 +2,7 @@
   "name": "comparador_prodes_serie",
   "label": "Comparador Prodes Série",
   "type": "widget",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "exbVersion": "1.18.0",
   "author": "Thyego Pery",
   "description": "Widget para análise de séries temporais de desmatamento PRODES/Inpe por recorte geográfico.",

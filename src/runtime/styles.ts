@@ -22,6 +22,23 @@ export const widgetStyles = css`
     gap: 4px;
     min-width: 0;
   }
+  .comparador-year-select {
+    display: block;
+    width: 100%;
+    min-height: 32px;
+    padding: 4px 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    border: 1px solid var(--ref-palette-neutral-400, #adadad);
+    border-radius: 4px;
+    background: var(--ref-palette-neutral-0, #fff);
+    color: inherit;
+    box-sizing: border-box;
+  }
+  .comparador-year-select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
   .comparador-hint {
     font-size: 11px;
     color: #6b6b6b;

@@ -10,6 +10,7 @@ import {
   detectYearField,
   enrichAttributeRowsWithRecords,
   loadProdesYearSeries,
+  normalizeYearValueSeries,
   schemaToFieldList,
   type YearValueRow
 } from '../../utils/prodes-table'
@@ -100,7 +101,7 @@ export function useProdesSeries ({
         main,
         fetchOpts
       )
-      setSeries(built)
+      setSeries(normalizeYearValueSeries(built))
 
       if (built.length === 0) {
         if (rows.length === 0 && records.length === 0) {

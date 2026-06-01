@@ -16,6 +16,8 @@ import {
   computePeriodVariation,
   formatPeriodLabel,
   formatPeriodRangeLabel,
+  normalizeYearValueSeries,
+  yearsInclude,
   getYearsAllowedForFinal,
   getYearsAllowedForInicial,
   sumValuesForYears,
@@ -508,5 +510,22 @@ describe('prodes-table utils', () => {
     expect(computePeriodVariation(series, [2008, 2009], [2009, 2018]).ok).toBe(false)
     expect(computePeriodVariation(series, [2018], [2008]).ok).toBe(false)
     expect(computePeriodVariation(series, [2008, 2010], [2018, 2019]).ok).toBe(false)
+  })
+
+  it('yearsInclude matches numeric selection against string years from layer', () => {
+    const allowed = getYearsAllowedForFinal(['2001', '2002', '2006'], [2001])
+    expect(yearsInclude(allowed, 2006)).toBe(true)
+    expect(yearsInclude(allowed, '2006')).toBe(true)
+  })
+
+  it('normalizeYearValueSeries coerces string years', () => {
+    const rows = normalizeYearValueSeries([
+      { year: '2001' as unknown as number, value: 10 },
+      { year: '2006' as unknown as number, value: 20 }
+    ])
+    expect(rows).toEqual([
+      { year: 2001, value: 10 },
+      { year: 2006, value: 20 }
+    ])
   })
 })
