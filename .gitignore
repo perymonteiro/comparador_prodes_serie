@@ -36,5 +36,5 @@ yarn-error.log*
 temp/
 tmp/
 
-# Build local do client EXB (gerado fora deste repositório)
-dist/
+# Build local na raiz do repositório (não ignorar docs/dist/ do GitHub Pages)
+/dist/
